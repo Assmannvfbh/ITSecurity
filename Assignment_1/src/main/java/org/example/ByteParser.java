@@ -123,12 +123,27 @@ public class ByteParser {
             content[k] = data[j];
             k++;
         }
+        //get corrct byte order
+        this.masterSeed = switchByteOrder(this.masterSeed);
+        this.transformSeed = switchByteOrder(this.transformSeed);
+        this.transformRounds = switchByteOrder(this.transformRounds);
+        this.encryIV = switchByteOrder(this.encryIV);
+        this.streamStartBytes = switchByteOrder(this.streamStartBytes);
+        this.content = switchByteOrder(this.content);
     }
 
     public short getDataLength(byte b1, byte b2){
         ByteBuffer buffer = ByteBuffer.wrap(new byte[]{b1,b2});
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         return buffer.getShort();
+    }
+
+    public byte[] switchByteOrder(byte[] array){
+        byte[] temp = new byte[array.length];
+        for(int i = 0; i < array.length; i++){
+            temp[i] = array[(array.length - 1) - i];
+        }
+        return temp;
     }
 
     public byte[] getMasterSeed() {
