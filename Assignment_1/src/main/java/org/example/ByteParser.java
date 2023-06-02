@@ -9,7 +9,7 @@ public class ByteParser {
     byte[] transformRounds;
     byte[] encryIV;
     byte[] streamStartBytes;
-
+    byte[] endOfHeader;
     byte[] content;
     int[] intValues;
     byte[] data;
@@ -19,6 +19,7 @@ public class ByteParser {
         this.pointer = 0;
         this.data = data;
         intValues = this.fillUpUsgInt(data);
+        findKeyCredentials();
     }
 
     public int[] fillUpUsgInt(byte[] data){
@@ -32,26 +33,118 @@ public class ByteParser {
     public void findKeyCredentials(){
         //skip first 12 bytes
         pointer = pointer + 12;
-        while (pointer < intValues.length){
+        int length;
+        int i;
+        boolean b = true;
+        while (b){
             switch(intValues[pointer]){
-                case 4: int length = getDataLength(data[pointer], data[pointer + 1]);
-                        pointer = pointer + 2;
-                        int i = 0;
+                case 4: length = getDataLength(data[pointer + 1], data[pointer + 2]);
+                        pointer = pointer + 3;
+                        i = 0;
+                    this.masterSeed = new byte[length];
                         for(int p = pointer; p < (pointer + length); p++ ){
                             masterSeed[i] = data[p];
+                            i++;
                         }
                         pointer = pointer + length;
                         break;
-
+                case 5: length = getDataLength(data[pointer + 1], data[pointer + 2]);
+                        pointer = pointer + 3;
+                        i = 0;
+                        this.transformSeed = new byte[length];
+                        for(int p = pointer; p < (pointer + length); p++ ){
+                            transformSeed[i] = data[p];
+                            i++;
+                        }
+                        pointer = pointer + length;
+                        break;
+                case 6: length = getDataLength(data[pointer + 1], data[pointer + 2]);
+                        pointer = pointer + 3;
+                        i = 0;
+                        this.transformRounds = new byte[length];
+                        for(int p = pointer; p < (pointer + length); p++ ){
+                            transformRounds[i] = data[p];
+                            i++;
+                        }
+                        pointer = pointer + length;
+                        break;
+                case 7: length = getDataLength(data[pointer + 1], data[pointer + 2]);
+                        pointer = pointer + 3;
+                        i = 0;
+                        this.encryIV = new byte[length];
+                        for(int p = pointer; p < (pointer + length); p++ ){
+                            encryIV[i] = data[p];
+                            i++;
+                        }
+                        pointer = pointer + length;
+                        break;
+                case 9: length = getDataLength(data[pointer + 1], data[pointer + 2]);
+                        pointer = pointer + 3;
+                        i = 0;
+                        this.streamStartBytes = new byte[length];
+                        for(int p = pointer; p < (pointer + length); p++ ){
+                            streamStartBytes[i] = data[p];
+                            i++;
+                        }
+                        pointer = pointer + length;
+                        break;
+                case 0: length = getDataLength(data[pointer + 1], data[pointer + 2]);
+                        pointer = pointer + 3;
+                        i = 0;
+                        this.endOfHeader = new byte[length];
+                        for(int p = pointer; p < (pointer + length); p++ ){
+                            endOfHeader[i] = data[p];
+                            i++;
+                        }
+                        pointer = pointer + length;
+                        b = false;
+                        break;
+                default:length = getDataLength(data[pointer + 1], data[pointer + 2]);
+                        pointer = pointer + 3;
+                        pointer = pointer + length;
+                        break;
             }
+
         }
-
-
+        int k = 0;
+        this.content = new byte[intValues.length - pointer];
+        for(int j = pointer; j < intValues.length; j++) {
+            content[k] = data[j];
+            k++;
+        }
     }
 
     public short getDataLength(byte b1, byte b2){
         ByteBuffer buffer = ByteBuffer.wrap(new byte[]{b1,b2});
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         return buffer.getShort();
+    }
+
+    public byte[] getMasterSeed() {
+        return masterSeed;
+    }
+
+    public byte[] getTransformSeed() {
+        return transformSeed;
+    }
+
+    public byte[] getTransformRounds() {
+        return transformRounds;
+    }
+
+    public byte[] getEncryIV() {
+        return encryIV;
+    }
+
+    public byte[] getStreamStartBytes() {
+        return streamStartBytes;
+    }
+
+    public byte[] getEndOfHeader() {
+        return endOfHeader;
+    }
+
+    public byte[] getContent() {
+        return content;
     }
 }

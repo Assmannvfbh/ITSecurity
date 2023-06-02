@@ -16,10 +16,6 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        byte b1 = 0b00000001;
-        byte b2 = 0b00000001;
-        ByteBuffer buffer = ByteBuffer.wrap(new byte[]{b1,b2});
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        System.out.println(buffer.getShort());
+        ByteParser parser = new ByteParser(data);
     }
 }
