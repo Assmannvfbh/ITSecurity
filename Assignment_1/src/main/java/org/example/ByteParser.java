@@ -44,6 +44,7 @@ public class ByteParser {
         pointer = pointer + 12;
         int length;
         int i;
+        //find credentials from headers
         boolean b = true;
         while (b){
             switch(intValues[pointer]){
@@ -115,6 +116,7 @@ public class ByteParser {
             }
 
         }
+        //get encrypted content
         int k = 0;
         this.content = new byte[intValues.length - pointer];
         for(int j = pointer; j < intValues.length; j++) {
