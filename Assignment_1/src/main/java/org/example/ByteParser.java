@@ -1,7 +1,11 @@
 package org.example;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ByteParser {
     byte[] masterSeed;
@@ -15,9 +19,14 @@ public class ByteParser {
     byte[] data;
     int pointer;
 
-    public ByteParser(byte[] data) {
+    public ByteParser(String path) {
+        try {
+            this.data = Files.readAllBytes(Paths.get(path));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         this.pointer = 0;
-        this.data = data;
         intValues = this.fillUpUsgInt(data);
         findKeyCredentials();
     }
