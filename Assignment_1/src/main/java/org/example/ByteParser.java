@@ -1,5 +1,7 @@
 package org.example;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,7 +23,12 @@ public class ByteParser {
 
     public ByteParser(String path) {
         try {
-            this.data = Files.readAllBytes(Paths.get(path));
+            File file = new File(path);
+            FileInputStream fl = new FileInputStream(file);
+            data = new byte[(int)file.length()];
+            fl.read(data);
+            fl.close();
+            //this.data = Files.readAllBytes(Paths.get(path));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -121,12 +128,13 @@ public class ByteParser {
         this.content = new byte[intValues.length - pointer];
         for(int j = pointer; j < intValues.length; j++) {
             content[k] = data[j];
+            System.out.println(intValues[j]);
             k++;
         }
-        //get corrct byte order
+        //get corrct byte order, because of little endian
         this.masterSeed = switchByteOrder(this.masterSeed);
         this.transformSeed = switchByteOrder(this.transformSeed);
-        this.transformRounds = switchByteOrder(this.transformRounds);
+        ////this.transformRounds = switchByteOrder(this.transformRounds);
         this.encryIV = switchByteOrder(this.encryIV);
         this.streamStartBytes = switchByteOrder(this.streamStartBytes);
         this.content = switchByteOrder(this.content);
