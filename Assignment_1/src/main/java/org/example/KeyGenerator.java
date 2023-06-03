@@ -15,18 +15,21 @@ public class KeyGenerator {
 
 
 
-    public static byte[] generateKey(byte[] masterSeed, byte[] transformSeed, byte[]transformRounds, byte[] encryIV, int password){
+    public static byte[] generateKey(byte[] masterSeed, byte[] transformSeed, byte[]transformRounds, byte[] encryIV, String password){
 
         byte[] credentials;
         byte[] transformedCredentials;
         byte[] key;
 
-        ByteBuffer b = ByteBuffer.allocate(4);
+        //ByteBuffer b = ByteBuffer.allocate(4);
         //ByteBuffer b = ByteBuffer.wrap(password.getBytes());
-        b.putInt(password);
+        //b.putInt(password);
 
+//        BigInteger bigInt = BigInteger.valueOf(password);
+//        byte[] c = bigInt.toByteArray();
+        byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
 
-        credentials = getSHA256Credentials(b.array());
+        credentials = getSHA256Credentials(passwordBytes);
 
 
         transformedCredentials = getTransformedCredentials(transformSeed,transformRounds,credentials);
@@ -69,8 +72,9 @@ public class KeyGenerator {
         //get number of transformation rounds
         ByteBuffer buffer = ByteBuffer.wrap(transRounds);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
-        long rounds = buffer.getLong(0);
+        long rounds = buffer.getLong();
 
+        //encrypt n = rounds times
         for(long i = 0; i < rounds; i++){
             try {
                 data = cipherECB.doFinal(data);
@@ -90,10 +94,10 @@ public class KeyGenerator {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-//        String masterSeedString = new String(masterSeed);
-//        String transCredentialsString = new String(transCredentials);
+//        String masterSeedString = new String(masterSeed, StandardCharsets.UTF_8);
+//        String transCredentialsString = new String(transCredentials, StandardCharsets.UTF_8);
 //        String finalString = masterSeedString.concat(transCredentialsString);
-//        System.out.println(Arrays.toString(finalString.getBytes(StandardCharsets.UTF_8)));
+        //System.out.println(Arrays.toString(finalString.getBytes(StandardCharsets.UTF_8)));
 
         //concat byte arrays
         byte[] concatenation = new byte[masterSeed.length + transCredentials.length];

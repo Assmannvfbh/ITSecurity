@@ -31,7 +31,7 @@ public class Decrypter {
         }
         System.arraycopy(temp, 0, first32Bytes, 0, 32);
 
-        return (Arrays.equals(streamStartBytes,first32Bytes));
+        return Arrays.equals(streamStartBytes,first32Bytes);
 
 
     }

@@ -128,10 +128,9 @@ public class ByteParser {
         this.content = new byte[intValues.length - pointer];
         for(int j = pointer; j < intValues.length; j++) {
             content[k] = data[j];
-            System.out.println(intValues[j]);
             k++;
         }
-        //get corrct byte order, because of little endian
+        //get correct byte order, because of little endian
         this.masterSeed = switchByteOrder(this.masterSeed);
         this.transformSeed = switchByteOrder(this.transformSeed);
         ////this.transformRounds = switchByteOrder(this.transformRounds);
