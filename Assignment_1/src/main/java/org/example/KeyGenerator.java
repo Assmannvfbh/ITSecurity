@@ -15,27 +15,17 @@ public class KeyGenerator {
 
 
 
-    public static byte[] generateKey(byte[] masterSeed, byte[] transformSeed, byte[]transformRounds, byte[] encryIV, String password){
+    public static byte[] generateKey(byte[] masterSeed, byte[] transformSeed, byte[]transformRounds, byte[] encryIV, byte[] password){
 
         byte[] credentials;
         byte[] transformedCredentials;
         byte[] key;
 
-        //ByteBuffer b = ByteBuffer.allocate(4);
-        //ByteBuffer b = ByteBuffer.wrap(password.getBytes());
-        //b.putInt(password);
-
-//        BigInteger bigInt = BigInteger.valueOf(password);
-//        byte[] c = bigInt.toByteArray();
-        byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
-
-        credentials = getSHA256Credentials(passwordBytes);
-
+        credentials = getSHA256Credentials(password);
 
         transformedCredentials = getTransformedCredentials(transformSeed,transformRounds,credentials);
 
         key = getFinalKey(masterSeed, transformedCredentials);
-
 
         return key;
 
@@ -61,7 +51,9 @@ public class KeyGenerator {
     private static byte[] getTransformedCredentials(byte[] transSeed, byte[] transRounds, byte[] data) {
         Cipher cipherECB;
         SecretKey secretKey;
+        MessageDigest instance;
         try {
+            instance = MessageDigest.getInstance("SHA-256");
             cipherECB = Cipher.getInstance("AES/ECB/NoPadding");
             secretKey = new SecretKeySpec(transSeed, "AES");
             cipherECB.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -83,7 +75,8 @@ public class KeyGenerator {
                 throw new RuntimeException(e);
             }
         }
-        return data;
+        //SHA-256 operation
+        return instance.digest(data);
     }
 
     private static byte[] getFinalKey(byte[] masterSeed, byte[] transCredentials){
@@ -100,11 +93,12 @@ public class KeyGenerator {
         //System.out.println(Arrays.toString(finalString.getBytes(StandardCharsets.UTF_8)));
 
         //concat byte arrays
-        byte[] concatenation = new byte[masterSeed.length + transCredentials.length];
-        System.arraycopy(masterSeed, 0, concatenation, 0, masterSeed.length);
-        System.arraycopy(transCredentials, 0, concatenation, masterSeed.length, transCredentials.length);
+//        byte[] concatenation = new byte[masterSeed.length + transCredentials.length];
+//        System.arraycopy(masterSeed, 0, concatenation, 0, masterSeed.length);
+//        System.arraycopy(transCredentials, 0, concatenation, masterSeed.length, transCredentials.length);
 
-        temp = instance.digest(concatenation);
+        instance.update(masterSeed);
+        temp = instance.digest(transCredentials);
 
         return temp;
     }

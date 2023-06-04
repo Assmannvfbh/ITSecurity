@@ -16,11 +16,9 @@ public class Decrypter {
         byte[] first32Bytes = new byte[32];
         Cipher cipherCBC;
         SecretKey secretKey;
-        SecureRandom random = new SecureRandom();
         try {
             cipherCBC = Cipher.getInstance("AES/CBC/NoPadding");
             secretKey = new SecretKeySpec(key, "AES");
-            random.setSeed(encryIV);
             cipherCBC.init(Cipher.DECRYPT_MODE,secretKey, new IvParameterSpec(encryIV));
 
             temp = cipherCBC.doFinal(content,0,32);
