@@ -19,7 +19,7 @@ public class Decrypter {
         try {
             cipherCBC = Cipher.getInstance("AES/CBC/NoPadding");
             secretKey = new SecretKeySpec(key, "AES");
-            cipherCBC.init(Cipher.DECRYPT_MODE,secretKey, new IvParameterSpec(encryIV));
+            cipherCBC.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(encryIV));
 
             temp = cipherCBC.doFinal(content,0,32);
 

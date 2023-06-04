@@ -131,12 +131,12 @@ public class ByteParser {
             k++;
         }
         //get correct byte order, because of little endian
-        this.masterSeed = switchByteOrder(this.masterSeed);
-        this.transformSeed = switchByteOrder(this.transformSeed);
+        //this.masterSeed = switchByteOrder(this.masterSeed);
+        //this.transformSeed = switchByteOrder(this.transformSeed);
         ////this.transformRounds = switchByteOrder(this.transformRounds);
-        this.encryIV = switchByteOrder(this.encryIV);
-        this.streamStartBytes = switchByteOrder(this.streamStartBytes);
-        this.content = switchByteOrder(this.content);
+        //this.encryIV = switchByteOrder(this.encryIV);
+        //this.streamStartBytes = switchByteOrder(this.streamStartBytes);
+        //this.content = switchByteOrder(this.content);
     }
 
     public short getDataLength(byte b1, byte b2){

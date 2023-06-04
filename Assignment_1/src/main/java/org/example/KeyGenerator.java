@@ -65,11 +65,13 @@ public class KeyGenerator {
         ByteBuffer buffer = ByteBuffer.wrap(transRounds);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         long rounds = buffer.getLong();
+        byte[] temp;
 
         //encrypt n = rounds times
         for(long i = 0; i < rounds; i++){
             try {
-                data = cipherECB.doFinal(data);
+                temp = cipherECB.doFinal(data);
+                data = temp;
                 //System.out.println(Arrays.toString(data));
             } catch (IllegalBlockSizeException | BadPaddingException e) {
                 throw new RuntimeException(e);
@@ -97,6 +99,8 @@ public class KeyGenerator {
 //        System.arraycopy(masterSeed, 0, concatenation, 0, masterSeed.length);
 //        System.arraycopy(transCredentials, 0, concatenation, masterSeed.length, transCredentials.length);
 
+
+        //append transCredentials to masterSeed and do SHA-256
         instance.update(masterSeed);
         temp = instance.digest(transCredentials);
 

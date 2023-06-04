@@ -19,7 +19,7 @@ public class Main {
             byte[] key = KeyGenerator.generateKey(parser.getMasterSeed(), parser.getTransformSeed(), parser.getTransformRounds(), parser.encryIV, psw);
             boolean result1 = Decrypter.decryptContent(parser.getContent(), key, parser.getEncryIV(), parser.getStreamStartBytes());
             if (result1){
-                System.out.println("Success!");
+                System.out.println(password);
             }
 
 
@@ -29,7 +29,7 @@ public class Main {
             key = KeyGenerator.generateKey(parser.getMasterSeed(), parser.getTransformSeed(), parser.getTransformRounds(), parser.encryIV, psw);
             boolean result2 = Decrypter.decryptContent(parser.getContent(), key, parser.getEncryIV(), parser.getStreamStartBytes());
             if (result2){
-                System.out.println("Success!");
+                System.out.println(password + " as Integer via ByteBuffer");
             }
 
             BigInteger bigInt = BigInteger.valueOf(password);
@@ -37,7 +37,7 @@ public class Main {
             key = KeyGenerator.generateKey(parser.getMasterSeed(), parser.getTransformSeed(), parser.getTransformRounds(), parser.encryIV, psw);
             boolean result3 = Decrypter.decryptContent(parser.getContent(), key, parser.getEncryIV(), parser.getStreamStartBytes());
             if (result3){
-                System.out.println("Success!");
+                System.out.println(password + " as Integer via BigInteger");
             }
         }
 //        byte[] test;
