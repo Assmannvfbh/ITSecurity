@@ -13,16 +13,17 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws NoSuchAlgorithmException {
-        ByteParser parser = new ByteParser("C:\\Users\\Niklas\\Desktop\\Niklas\\IT Security\\Assignments\\ITSecurity\\Assignment_1\\databases\\databases\\Koohiana.kdbx");
+        //ByteParser parser = new ByteParser("C:\\Users\\Niklas\\Desktop\\Niklas\\IT Security\\Assignments\\ITSecurity\\Assignment_1\\databases\\databases\\Koohiana.kdbx");
+        ByteParser parser = new ByteParser("C:\\Users\\Faraz\\Documents\\Uniwork\\Sem06\\IT\\Koohiana.kdbx");
         for (int password = 0; password < 10000; password++) {
-            byte[] psw = String.valueOf(password).getBytes();
+            byte[] psw = String.format("%04d", password).getBytes();
             byte[] key = KeyGenerator.generateKey(parser.getMasterSeed(), parser.getTransformSeed(), parser.getTransformRounds(), parser.encryIV, psw);
             boolean result1 = Decrypter.decryptContent(parser.getContent(), key, parser.getEncryIV(), parser.getStreamStartBytes());
             if (result1){
                 System.out.println(password);
             }
 
-
+    	    /*
             ByteBuffer buffer = ByteBuffer.allocate(4);
             buffer.putInt(password);
             psw = buffer.array();
@@ -39,7 +40,9 @@ public class Main {
             if (result3){
                 System.out.println(password + " as Integer via BigInteger");
             }
+            */
         }
+        
 //        byte[] test;
 //        MessageDigest dig = MessageDigest.getInstance("SHA256");
 //        ByteBuffer buffer = ByteBuffer.allocate(4);
