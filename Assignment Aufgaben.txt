@@ -1,3 +1,14 @@
+Aufgabe 1)
+
+b)
+Assmannn:
+	Login: 5518
+	Entry: IT Security; is exciting
+	
+Koohiana:
+	Login: 5441
+	Entry: IT Security; is exciting
+	
 Aufgabe 2)
  
 a)The transformation rounds are a convinient protection against brute force attacks. Since the effectiveness
