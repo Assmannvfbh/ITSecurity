@@ -13,8 +13,10 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws NoSuchAlgorithmException {
-        //ByteParser parser = new ByteParser("C:\\Users\\Niklas\\Desktop\\Niklas\\IT Security\\Assignments\\ITSecurity\\Assignment_1\\databases\\databases\\Koohiana.kdbx");
-        ByteParser parser = new ByteParser("C:\\Users\\Faraz\\Documents\\Uniwork\\Sem06\\IT\\Koohiana.kdbx");
+        ByteParser parser = new ByteParser("C:\\Users\\Niklas\\Desktop\\Niklas\\IT Security\\Assignments\\ITSecurity\\Assignment_1\\databases\\databases\\Assmannn.kdbx");
+        //ByteParser parser = new ByteParser("C:\\Users\\Faraz\\Documents\\Uniwork\\Sem06\\IT\\Koohiana.kdbx");
+        final long timeStart = System.currentTimeMillis();
+        long timeEnd;
         for (int password = 0; password < 10000; password++) {
             byte[] psw = String.format("%04d", password).getBytes();
             byte[] key = KeyGenerator.generateKey(parser.getMasterSeed(), parser.getTransformSeed(), parser.getTransformRounds(), parser.encryIV, psw);
@@ -42,6 +44,8 @@ public class Main {
             }
             */
         }
+        timeEnd = System.currentTimeMillis();
+        System.out.println( " Time:" + (timeEnd - timeStart) + " Millisek.");
         
 //        byte[] test;
 //        MessageDigest dig = MessageDigest.getInstance("SHA256");
