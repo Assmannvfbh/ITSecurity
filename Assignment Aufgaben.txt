@@ -39,3 +39,22 @@ Time: 1679616/39 = 43067 seconds = 718 minutes ~ 12 hours
 
 2. Extending key possiblities including 26 minor and 26 captial characters of the standard alphabet -> (26 + 26 + 10)^4 = 14776336
 Time: 14776336/39 = 378880 seconds ~ 6315 minutes ~ 105 hours ~ 4,5 days
+
+d)
+A KDBX file consists of multiple parts, starting with the Header. The Header contains the stream start bytes, located in the first 32 unencrypted bytes of the file.
+
+If the integrity of the stream start bytes is compromised, the Keepass software will not recognize the file as secure and cannot open it. The stream start bytes serve to validate the file's integrity and the correctness of the key.
+
+The 32-byte stream start bytes should have been randomly generated during file saving.
+
+The database section of the file immediately follows the stream start bytes. To validate the generated final master key, compare the initial 32 bytes with the stored "Stream Start Bytes" field.
+
+The data in the file consists of multiple blocks, with each block structured as follows:
+
+Block ID: An integer representing the block's ID. The first block has an ID of 0.
+Block Hash: A 32-byte hash value of the Block Data.
+Data Size: An integer indicating the size of the Block Data.
+Block Data: The actual data contained within the block.
+By analyzing and comparing these block structures, you can effectively process the KDBX file.
+
+Utilizing cryptographic hash functions provides a reliable method to ensure file integrity in .kdbx files without explicitly storing the first 32 bytes in plaintext. By computing and comparing hash values, the integrity of the file can be verified, offering robust protection against tampering. Implementing industry best practices and using secure hash functions are essential for effective file integrity checks.
