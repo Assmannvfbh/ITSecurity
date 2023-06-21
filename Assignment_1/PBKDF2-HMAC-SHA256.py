@@ -1,28 +1,44 @@
-import hmac
 import hashlib
 
-psw = bytes("passppword", 'utf-8')
-secret = bytes("seeseeder", 'utf-8')
+psw = bytes("padpassppword", 'utf-8')
+secret = bytes("seesederseeseeder", 'utf-8')
 
-def pbkdf2(password, master_seed, transform_rounds, key_size=32):
+def pbkdf2_hmac_sha256(password, master_seed, transform_rounds, dklen=32):
 
-    # The '36' byte sequence (ipad) is used for inner padding
-    # The '5C' byte sequence (opad) is used for outer padding
-    # Create the inner and outer pad sequences by XORing the padded key with specific byte sequences
-    Si = bytes((Key ^ 0x36) for Key in range(256))
-    So = bytes((Key ^ 0x5C) for Key in range(256))
+    dk = b""
+    block_index = 1
 
-    # Pad the key with zeroes on the right to match the desired length
-    s_zpad = master_seed.ljust(key_size, b'\0')
+    while len(dk) < dklen:
+        
+        prev = u = hmac(password, master_seed + block_index.to_bytes(4, 'big'))
+        block_index += 1
 
-    # XOR is performed by translating each byte in the padded key according to the byte sequences
-    s_ipad = s_zpad.translate(Si)  # Inner pad sequence
-    s_opad = s_zpad.translate(So)  # Outer pad sequence
+        for _ in range(transform_rounds - 1):
+            u = hmac(password, u)
+            prev = bytes(x ^ y for x, y in zip(prev, u))
 
-    hashed_psw = hashlib.sha256(s_ipad+password).digest()
-    for i in range(transform_rounds):
-        hashed_psw =  hashlib.sha256(s_opad + hashed_psw).digest()
-    return hashed_psw
+        dk += prev
+
+    return dk[:dklen]
 
 
-print("Comparison results:\n", pbkdf2(psw, secret, 1).hex(), "\n", hmac.new(psw,secret,digestmod="sha256").hexdigest())
+def hmac(key, message):
+
+    block_size = 64
+
+    # If the key is longer than the block size, hash it else pad it with 0s
+    if len(key) > block_size:
+        key = hashlib.sha256(key).digest()
+
+    if len(key) < block_size:
+        key += b'\x00' * (block_size - len(key))
+
+    # Paddings
+    inner_pad = bytes((x ^ 0x36) for x in key)
+    outer_pad = bytes((x ^ 0x5C) for x in key)
+
+    hmac_hash = hashlib.sha256(outer_pad + hashlib.sha256(inner_pad + message).digest()).digest()
+
+    return hmac_hash
+
+print("Comparison results:\n", pbkdf2_hmac_sha256(psw, secret, 1, 32).hex(), "\n", hashlib.pbkdf2_hmac("sha256", psw, secret, 1, 32).hex())
