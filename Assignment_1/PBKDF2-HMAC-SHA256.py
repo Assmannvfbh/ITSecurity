@@ -1,4 +1,5 @@
 import hashlib
+import time
 
 psw = bytes("padpassppword", 'utf-8')
 secret = bytes("seesederseeseeder", 'utf-8')
@@ -42,3 +43,8 @@ def hmac(key, message):
     return hmac_hash
 
 print("Comparison results:\n", pbkdf2_hmac_sha256(psw, secret, 1, 32).hex(), "\n", hashlib.pbkdf2_hmac("sha256", psw, secret, 1, 32).hex())
+
+start = time.time()
+pbkdf2_hmac_sha256(psw, secret, 24000, 32)
+end = time.time()
+print("\n", end - start)
