@@ -1,0 +1,17 @@
+The typical implementation of the shebang (#!) mechanism introduces a race condition that can lead to security vulnerabilities. The process involves the kernel opening the executable, identifying the #! at the beginning, closing the executable, and then opening the associated interpreter. However, if setuid scripts are allowed, an attacker can exploit this by creating a symbolic link to an existing setuid script, executing it, and manipulating the link before the interpreter opens the script. As a result, most operating systems ignore the setuid bit when a shebang is detected.
+
+One proposed solution is for the kernel to lock the script file until the interpreter opens it. However, due to the avoidance of mandatory locks and the challenges posed by incorporating symbolic links into a proper locking mechanism, this approach is not commonly implemented.
+
+TOCTOU (time-of-check to time-of-use) races are a class of software bugs that stem from race conditions involving the checking and utilization of system states, such as security credentials. These races remain a problem in modern systems, as demonstrated by vulnerabilities discovered in Docker in 2019, allowing unauthorized access to the host platform's filesystem. Exploiting a TOCTOU race condition requires precise timing to ensure that the attacker's actions interleave correctly with the victim's operations.
+
+An alternative solution proposed by the research community is the adoption of transactions within the file system or the operating system kernel. Transactions provide a concurrency control mechanism that can effectively mitigate TOCTOU races.
+
+Many TOCTOU vulnerabilities arise from the lack of synchronization control in the file system API of an operating system. Consequently, finding a comprehensive solution to this problem remains a challenging task.
+
+I hope this revised version meets your requirements. If you have any further requests or need additional assistance, feel free to ask!
+
+
+
+
+
+
