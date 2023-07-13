@@ -2,3 +2,6 @@ A) find / -perm -4000 -type f -exec ls -la {} 2>/dev/null \;
 B) Vim is primarily used as a text editor. However, if it runs with SUID (Set User ID) privileges, it inherits the permissions of the root user. Consequently, it gains the ability to read all files on the system, including sensitive ones.
 
 For example, executing the command "vim.tiny /etc/shadow" allows Vim to access the /etc/shadow file. Typically, this file is owned by the root user, and its group is set to an administrative group like "shadow." Direct access to the file is restricted to prevent unauthorized users from gathering password hashes of other users.
+
+
+Another entrypoint to excalate priviliges is the toor backdoor in /var/tmp file. Executing this file gives the current user escalated priviliges. The reason for this security issue are multifold. It could have been a trojan horse for example.

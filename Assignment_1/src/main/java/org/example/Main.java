@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws NoSuchAlgorithmException {
-        ByteParser parser = new ByteParser("C:\\Users\\Niklas\\Desktop\\Niklas\\IT Security\\Assignments\\ITSecurity\\Assignment_1\\databases\\databases\\Assmannn.kdbx");
+        ByteParser parser = new ByteParser("C:\\Users\\Niklas\\Desktop\\Niklas\\IT Security\\Homework1\\Assignments\\ITSecurity\\Aufgabe 2-e) Assmannn.kdbx");
         //ByteParser parser = new ByteParser("C:\\Users\\Faraz\\Documents\\Uniwork\\Sem06\\IT\\Koohiana.kdbx");
         final long timeStart = System.currentTimeMillis();
         long timeEnd;
