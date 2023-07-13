@@ -5,3 +5,7 @@ For example, executing the command "vim.tiny /etc/shadow" allows Vim to access t
 
 
 Another entrypoint to excalate priviliges is the toor backdoor in /var/tmp file. Executing this file gives the current user escalated priviliges. The reason for this security issue are multifold. It could have been a trojan horse for example.
+
+
+The third security issue is /usr/bin/bash. Any user can this bash with setuid priviiges and can therefore read and manipulate file which just the root has access to.
+
